@@ -72,7 +72,7 @@ Functions:
 
         ::
 
-                write_snirfwrite_snirf(name,thisdata,thisSD,thisstim,metadict,theaux=[], debug=False) (and some routines for initializing arrays).  
+                write_snirf(name,thisdata,thisSD,thisstim,metadict,theaux=[], debug=False) (and some routines for initializing arrays).  
 
 
 
