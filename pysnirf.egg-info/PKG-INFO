@@ -1,0 +1,40 @@
+Metadata-Version: 1.1
+Name: pysnirf
+Version: 1.0.0
+Summary: Tools for performing correlation analysis on fMRI data.
+Home-page: https://github.com/bbfrederick/pysnirf
+Author: Blaise Frederick
+Author-email: bbfrederick@mclean.harvard.edu
+License: Apache Software License
+Description-Content-Type: UNKNOWN
+Description: pysnirf
+        =======================
+        This is a barebones library to read and write SNIRF files
+        
+        HTML documentation is here: http://pysnirf.readthedocs.io/en/latest/
+        
+        NOTE
+        ====
+        This is an evolving code base.  I'm constantly tinkering with it.  That said,
+        now that I'm releasing this to the world, I'm being somewhat more responsible
+        about locking down stable release points.  In between releases, however, I'll
+        be messing with things. **It's very possible
+        I could break something while doing this, so check back for status updates
+        if you download the code in between releases**.  I've finally become a little
+        more modern and started adding
+        automated testing, so as time goes by hopefully the "in between" releases will
+        be somewhat more reliable.  Check back often for exciting new features and bug
+        fixes!
+        
+Keywords: fMRI,correlation,clustering,states
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Medical Science Apps.
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5

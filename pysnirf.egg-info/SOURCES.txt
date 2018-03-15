@@ -1,0 +1,12 @@
+MANIFEST.in
+README.md
+setup.cfg
+setup.py
+pysnirf/snirflib.py
+pysnirf.egg-info/PKG-INFO
+pysnirf.egg-info/SOURCES.txt
+pysnirf.egg-info/dependency_links.txt
+pysnirf.egg-info/not-zip-safe
+pysnirf.egg-info/requires.txt
+pysnirf.egg-info/top_level.txt
+pysnirf/scripts/snirftest

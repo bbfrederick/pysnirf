@@ -1,0 +1,215 @@
+#!/Users/frederic/anaconda/bin/python
+#
+#       $Author: frederic $
+#       $Date: 2013/08/30 18:39:43 $
+#       $Id: snirftest,v 1.3 2013/08/30 18:39:43 frederic Exp $
+#
+from __future__ import print_function
+
+import numpy
+import pysnirf.snirflib as snirf
+    
+# create and populate an SD structure
+print("initializing SD structure...")
+numlambdas=2
+numlambdaex=0
+numsrc=2
+numdet=1
+the_SD_lambdas,the_SD_lambdaex,the_SD_srcpos,the_SD_detpos,the_SD_srclabels,the_SD_detlabels=snirf.make_SD_arrays(numlambdas,numlambdaex,numsrc,numdet)
+
+print("populating SD structure...")
+the_SD_lambdas[0]=690.0
+the_SD_lambdas[1]=830.0
+the_SD_srclabels[0]='1'
+the_SD_srcpos[0]['x']=-1.5
+the_SD_srcpos[0]['y']=0.0
+the_SD_srcpos[0]['z']=0.0
+the_SD_srclabels[1]='2'
+the_SD_srcpos[1]['x']=1.5
+the_SD_srcpos[1]['y']=0.0
+the_SD_srcpos[1]['z']=0.0
+the_SD_detlabels[0]='A'
+the_SD_detpos[0]['x']=0.5
+the_SD_detpos[0]['y']=0.0
+the_SD_detpos[0]['z']=0.0
+
+the_SD = {}
+the_SD['Lambda']=the_SD_lambdas
+the_SD['LambdaExcitation']=the_SD_lambdaex
+the_SD['SrcPos']=the_SD_srcpos
+the_SD['DetPos']=the_SD_detpos
+the_SD['SrcLabels']=the_SD_srclabels
+the_SD['DetLabels']=the_SD_detlabels
+
+# create and populate a data structure
+print("initializing data structure...")
+nchans = 4 
+ntimepoints = 100
+
+the_data=[]
+for chan in range(0,nchans):
+    the_data_tvec,the_data_dvec,the_ml=snirf.make_data_arrays(ntimepoints)
+    the_data_tvec=numpy.arange(0,1.0,1.0/ntimepoints)
+    the_data_dvec[:]=numpy.sin(the_data_tvec*2.0*numpy.pi*(chan+1))
+    the_ml['DataType'] = 1
+    the_ml['DataTypeIndex'] = 0
+    #the_ml['SourcePower'] = 0.0
+    #the_ml['DetectorGain'] = 0.0
+    this_data={}
+    this_data['t']=the_data_tvec
+    this_data['d']=the_data_dvec
+    this_data['ml']=the_ml
+    the_data.append(this_data)
+    ntimepoints=ntimepoints*2
+
+print("populating data structure...")
+print(the_data[0]['ml'])
+the_data[0]['ml']['SourceIndex'] = 0
+the_data[0]['ml']['DetectorIndex'] = 0
+the_data[0]['ml']['WavelengthIndex'] = 0
+the_data[1]['ml']['SourceIndex'] = 0
+the_data[1]['ml']['DetectorIndex'] = 0
+the_data[1]['ml']['WavelengthIndex'] = 1
+the_data[2]['ml']['SourceIndex'] = 1
+the_data[2]['ml']['DetectorIndex'] = 0
+the_data[2]['ml']['WavelengthIndex'] = 0
+the_data[3]['ml']['SourceIndex'] = 1
+the_data[3]['ml']['DetectorIndex'] = 0
+the_data[3]['ml']['WavelengthIndex'] = 1
+
+# create and populate a stim structure
+print("initializing stim structure...")
+
+print("populating stim structure...")
+cb_stimnames,cb_stimdata=snirf.make_stim_arrays(3)
+cb_stimdata[0]['start']=20.0
+cb_stimdata[0]['duration']=20.0
+cb_stimdata[0]['value']=1.0
+cb_stimdata[1]['start']=60.0
+cb_stimdata[1]['duration']=20.0
+cb_stimdata[1]['value']=1.0
+cb_stimdata[2]['start']=100.0
+cb_stimdata[2]['duration']=20.0
+cb_stimdata[2]['value']=1.0
+cb_stim={}
+cb_stim['Name']=b'checkerboard'
+cb_stim['Data']=cb_stimdata
+
+tp_stimnames,tp_stimdata=snirf.make_stim_arrays(1)
+tp_stimdata[0]['start']=50.0
+tp_stimdata[0]['duration']=10.0
+tp_stimdata[0]['value']=1.0
+tp_stim={}
+tp_stim['Name']=b'thermal_pain'
+tp_stim['Data']=tp_stimdata
+
+od_stimnames,od_stimdata=snirf.make_stim_arrays(10)
+od_stimdata[0]['start']=10.0
+od_stimdata[0]['duration']=10.0
+od_stimdata[0]['value']=0.1
+od_stimdata[1]['start']=20.0
+od_stimdata[1]['duration']=10.0
+od_stimdata[1]['value']=0.2
+od_stimdata[2]['start']=30.0
+od_stimdata[2]['duration']=10.0
+od_stimdata[2]['value']=0.3
+od_stimdata[3]['start']=40.0
+od_stimdata[3]['duration']=10.0
+od_stimdata[3]['value']=0.4
+od_stimdata[4]['start']=50.0
+od_stimdata[4]['duration']=10.0
+od_stimdata[4]['value']=0.5
+od_stimdata[5]['start']=60.0
+od_stimdata[5]['duration']=10.0
+od_stimdata[5]['value']=0.6
+od_stimdata[6]['start']=70.0
+od_stimdata[6]['duration']=10.0
+od_stimdata[6]['value']=0.7
+od_stimdata[7]['start']=80.0
+od_stimdata[7]['duration']=10.0
+od_stimdata[7]['value']=0.8
+od_stimdata[8]['start']=90.0
+od_stimdata[8]['duration']=10.0
+od_stimdata[8]['value']=0.9
+od_stimdata[9]['start']=100.0
+od_stimdata[9]['duration']=10.0
+od_stimdata[9]['value']=1.0
+od_stim={}
+od_stim['Name']=b'odor'
+od_stim['Data']=od_stimdata
+the_stim=[cb_stim, tp_stim, od_stim]
+
+# make and populate and aux structure
+numaux=4
+nauxtimepoints=100
+the_aux=[]
+
+auxnames=['puls','resp','ecg','ext']
+for auxidx in range(0,numaux):
+    the_aux_tvec,the_aux_dvec,the_auxname=snirf.make_aux_arrays(nauxtimepoints)
+    the_aux_tvec=numpy.arange(0,1.0,1.0/nauxtimepoints)
+    the_aux_dvec[:]=numpy.random.randn(nauxtimepoints)
+    this_aux={}
+    this_aux['t']=the_aux_tvec
+    this_aux['d']=the_aux_dvec
+    the_auxname=auxnames[auxidx]
+    this_aux['Name']=the_auxname
+    the_aux.append(this_aux)
+
+# define the required tags
+metadict={}
+print("setting required tags...")
+metadict['SpatialUnit']='cm'
+metadict['MeasurementDate']='20130801'
+metadict['MeasurementTime']='080000'
+metadict['SubjectID']='1234'
+
+# define optional tags
+print("setting optional tags...")
+metadict['ManufacturerName']='ISS'
+metadict['Model']='Imagent'
+metadict['SubjectName']= 'Pseudonym, I.M.A.'
+metadict['DateOfBirth']='20120401'
+metadict['AcquisitionStartTime']='150127.34'
+metadict['CalibrationFileName']='phantomcal_121015.snirf'
+
+# write out the file
+print("writing snirf file...")
+snirf.write_snirf('testfile.snirf',the_data,the_SD,the_stim,metadict,theaux=the_aux)
+
+# read it back and check that we got what we put in
+print("reading snirf file...")
+compliant,thereaddata,thereadSD,thereadstims,thereadattrs,thereadmetaattrs,thereadaux=snirf.read_snirf('testfile.snirf')
+print(thereaddata)
+if (compliant==False):
+    print("ERROR: File failed validation check")
+else:
+    print("File passed validation check")
+
+numidx=len(thereaddata)
+print(numidx, ' measurements found')
+for i in range(0,numidx):
+    snirf.print_measurement(thereaddata[i])
+
+numfoundstims=len(thereadstims)
+print(numfoundstims, ' stimuli found')
+for i in range(0,numfoundstims):
+    snirf.print_stim(thereadstims[i])
+
+snirf.print_SD(thereadSD)
+
+if(thereadaux!=[]):
+    numfoundauxs=len(thereadaux)
+    print(numfoundauxs, ' aux timecourses found')
+    for i in range(0,numfoundauxs):
+        snirf.print_aux(thereadaux[i])
+
+print("Tags found in file:")
+for thetag in thereadattrs:
+    print(thetag[0],':	',thetag[1])
+print
+
+print("metadata tags found in file:")
+for thetag in thereadmetaattrs:
+    print(thetag[0],':	',thetag[1])
+print
