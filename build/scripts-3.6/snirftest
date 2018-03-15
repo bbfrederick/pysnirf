@@ -213,3 +213,43 @@ print("metadata tags found in file:")
 for thetag in thereadmetaattrs:
     print(thetag[0],':	',thetag[1])
 print
+
+
+# now read it back using the class interface
+print('\n\n\n')
+print('reading with class interface')
+thesnirf = snirf.snirffile(filename='testfile.snirf')
+
+print(thesnirf.data)
+if thesnirf.compliant == False:
+    print("ERROR: File failed validation check")
+else:
+    print("File passed validation check")
+
+numidx=len(thesnirf.data)
+print(numidx, ' measurements found')
+for i in range(0, numidx):
+    snirf.print_measurement(thesnirf.data[i])
+
+numfoundstims=len(thesnirf.stims)
+print(numfoundstims, ' stimuli found')
+for i in range(0, numfoundstims):
+    snirf.print_stim(thesnirf.stims[i])
+
+snirf.print_SD(thesnirf.SD)
+
+if thesnirf.auxs is not None:
+    numfoundauxs = len(thesnirf.auxs)
+    print(numfoundauxs, ' aux timecourses found')
+    for i in range(0, numfoundauxs):
+        snirf.print_aux(thesnirf.auxs[i])
+
+print("Tags found in file:")
+for thetag in thesnirf.attrs:
+    print(thetag[0],':	',thetag[1])
+print
+
+print("metadata tags found in file:")
+for thetag in thesnirf.metaattrs:
+    print(thetag[0],':	',thetag[1])
+print

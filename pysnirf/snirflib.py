@@ -76,14 +76,108 @@ def readgroup(fileptr,basename):
             idx=idx+1
     return thevals
 
+class snirffile:
+    compliant = None
+    fileversion = None
+    data = None
+    SD = None
+    stims = None
+    attrs = None
+    metaattrs = None
+    auxs = None
+    filename = None
+
+    def __init__(self, filename=None):
+        self.compliant = None
+        self.fileversion = None
+        self.data = None
+        self.SD = None
+        self.stims = None
+        self.attrs = None
+        self.metaattrs = None
+        self.auxs = None
+        self.filename = filename
+        if self.filename is not None:
+            self.compliant, self.data, self.SD, self.stims, self.attrs, self.metaattrs, self.auxs = \
+                read_snirf(self.filename)
+
+
+    def make_ml_array(nchans):
+        return np.zeros((nchans,), dtype=ml_dtype)
+
+    def make_stim_arrays(numconditions):
+        the_stimname = np.zeros((1,), dtype=namestring_dtype)
+        the_stimdata = np.zeros((numconditions,), dtype=stim_data_dtype)
+        return(the_stimname,the_stimdata)
+    
+    def make_aux_arrays(ntimepoints):
+        the_aux_tvec = np.zeros((ntimepoints,), dtype=np.float64)
+        the_aux_dvec = np.zeros((ntimepoints,), dtype=np.float64)
+        the_auxname = np.zeros((1,), dtype=namestring_dtype)
+        return(the_aux_tvec,the_aux_dvec,the_auxname)
+    
+    def make_data_arrays(ntimepoints):
+        the_data_tvec = np.zeros((ntimepoints,),dtype=np.float64)
+        the_data_dvec = np.zeros((ntimepoints,),dtype=np.float64)
+        the_ml = np.zeros((1,), dtype=ml_dtype)
+        return(the_data_tvec,the_data_dvec,the_ml)
+    
+    def make_SD_arrays(numlambdas,numlambdaex,numsrc,numdet):
+        the_SD_lambdas = np.zeros((numlambdas,),dtype=np.float64)
+        the_SD_lambdaex = np.zeros((numlambdaex,),dtype=np.float64)
+        the_SD_srcpos = np.zeros((numsrc,),dtype=pos_dtype)
+        the_SD_detpos = np.zeros((numdet,),dtype=pos_dtype)
+        the_SD_srclabels = np.zeros((numsrc,),dtype='a64')
+        the_SD_detlabels = np.zeros((numdet,),dtype='a64')
+        return(the_SD_lambdas,the_SD_lambdaex,the_SD_srcpos,the_SD_detpos,the_SD_srclabels,the_SD_detlabels)
+
+    """
+    def iscompliant(self):
+        return self.compliant
+
+
+    def fileversion(self):
+        return self.fileversion
+
+
+    def data(self):
+        return self.thedata
+
+
+    def SD(self):
+        return self.theSD
+
+
+    def stims(self):
+        return self.thestims
+       
+
+    def attrs(self):
+        return self.theattrs
+       
+
+    def metaattrs(self):
+        return self.themetaattrs
+       
+
+    def auxs(self):
+        return self.theauxs
+       
+
+    def filename(self):
+        return self.filename
+    """
+       
+
+
 def read_snirf(name):
     thehdf = h5py.File(name,'r')
 
-    Compliant=True
+    compliant=True
     fileversion = thehdf.attrs['format_version']
     if (fileversion != 1.0):
         print("incorrect file version number")
-        Compliant=False
+        compliant=False
 
     # read back and construct the data struct
     thedata=readgroup(thehdf,'/data/')
@@ -92,7 +186,7 @@ def read_snirf(name):
     if(nelements>0):
         print(nelements, " data elements detected")
     else:
-        Compliant=False
+        compliant=False
         print("FILE INVALID - required structure missing: data")
     # check to see that each dataset has all required fields
     for thedataset in thedata:
@@ -101,7 +195,7 @@ def read_snirf(name):
             testval = thedataset.attrs.get(item)
             if (testval==''):
                 print("MEASUREMENT INVALID - required datasete attribute missing: ",item)
-                Compliant=False
+                compliant=False
 
     # read back and construct the SD struct
     try:
@@ -109,7 +203,7 @@ def read_snirf(name):
     except KeyError:
         theSD=[]
         print("FILE INVALID - required structure missing: SD")
-        Compliant=False
+        compliant=False
 
     # read back and construct the data struct
     thestims=readgroup(thehdf,'/stim/')
@@ -117,7 +211,7 @@ def read_snirf(name):
     if(nelements>0):
         print(nelements, " stim elements detected")
     else:
-        Compliant=False
+        compliant=False
         print("FILE INVALID - required structure missing: stim")
 
     # read back the aux
@@ -135,24 +229,24 @@ def read_snirf(name):
     testval = metagroup.attrs.get('SpatialUnit')
     if (testval==''):
         print("FILE INVALID - required tag missing: SpatialUnit")
-        Compliant=False
+        compliant=False
 
     testval = metagroup.attrs.get('MeasurementDate')
     if (testval==''):
         print("FILE INVALID - required tag missing: MeasurementData")
-        Compliant=False
+        compliant=False
 
     testval = metagroup.attrs.get('MeasurementTime')
     if (testval==''):
         print("FILE INVALID - required tag missing: MeasurementTime")
-        Compliant=False
+        compliant=False
 
     testval = metagroup.attrs.get('SubjectID')
     if (testval==''):
         print("FILE INVALID - required tag missing: SubjectID")
-        Compliant=False
+        compliant=False
 
-    return Compliant,thedata,theSD,thestims,theattrs,themetaattrs,theauxs
+    return compliant,thedata,theSD,thestims,theattrs,themetaattrs,theauxs
 
 def write_snirf(name,thisdata,thisSD,thisstim,metadict,theaux=[], debug=False):
 
@@ -217,6 +311,7 @@ def write_snirf(name,thisdata,thisSD,thisstim,metadict,theaux=[], debug=False):
     # clean up
     thehdf.close()
     
+
 def print_SD(theSD):
     print('Lambdas:')
     numlambda=len(theSD['Lambda'])
