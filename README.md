@@ -1,6 +1,7 @@
 pysnirf
 =======================
-pysnirf is a suite of python programs used to read and write standard near infrared format files (.snirf file). It aims to comply with the file specification set out here: https://docs.google.com/document/d/1EKEMrB6CxmEGnzI4zi7MugHq318HRaR3M2i_vzRIPFU/edit?usp=sharing
+pysnirf is a suite of python programs used to read and write standard near infrared format files (.snirf file). It aims to comply with the file specification set out here: 
+https://docs.google.com/document/d/1kLQnFNSXsCAcUNcCPtyTerSwatCOnLcX4fAaZsidCbI/edit
 
 HTML documentation is here: http://pysnirf.readthedocs.io/en/latest/
 
